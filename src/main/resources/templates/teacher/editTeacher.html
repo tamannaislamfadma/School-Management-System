@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Edit Teacher</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="main_container">
+        <div class="col-md-12">
+            <div class="right_col" role="main">
+                <div class="col-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><b>Edit Teacher</b></h2>
+                            <div style="text-align: right;">
+                                <a th:href="@{/teacher/list}" class="btn btn-outline-success btn-sm">Teacher Lists</a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <form th:action="@{/teacher/updateTeacher/{id}(id=${teacher.id})}" method="post" th:object="${teacher}" id="teacherForm">
+
+                            <input type="hidden" th:field="*{activeStatus}"/>
+                            <input type="hidden" th:field="*{photoUrl}"/>
+                            <input type="hidden" th:field="*{documentsUrl}"/>
+
+                            <div class="form-group col-md-12">
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="name">Name</label>
+                                        <input type="text" th:field="*{name}" class="form-control" id="name" required/>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="email">Email</label>
+                                        <input type="email" th:field="*{email}" id="email" class="form-control" required/>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="fathersName">Father's Name</label>
+                                        <input type="text" th:field="*{fathersName}" id="fathersName" class="form-control"/>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="mothersName">Mother's Name</label>
+                                        <input type="text" th:field="*{mothersName}" id="mothersName" class="form-control"/>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="phoneNumber">Phone Number</label>
+                                        <input type="text" th:field="*{phoneNumber}" id="phoneNumber" class="form-control"/>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="age">Age</label>
+                                        <input type="text" th:field="*{age}" id="age" class="form-control"/>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="academicBackground">Academic Background</label>
+                                        <input type="text" th:field="*{academicBackground}" id="academicBackground" class="form-control"/>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="nationality">Nationality</label>
+                                        <input type="text" th:field="*{nationality}" id="nationality" class="form-control"/>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="religion">Religion</label>
+                                        <input type="text" th:field="*{religion}" id="religion" class="form-control"/>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="dob">Date Of Birth</label>
+                                        <input type="text" th:field="*{dob}" id="dob" class="form-control"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <button type="submit" class="btn btn-primary">Update Teacher</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

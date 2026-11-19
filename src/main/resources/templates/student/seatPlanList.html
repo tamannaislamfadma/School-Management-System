@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Seat Plans</title>
+    <style>
+        .student-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="main_container">
+        <div class="col-md-12">
+            <div class="right_col" role="main">
+                <div class="col-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><b>Seat Plans</b></h2>
+                            <div style="text-align: right;">
+                                <a th:href="@{/student/addseatplan}" class="btn btn-outline-primary btn-sm">Make Seat Plan</a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <!-- Seat Plan Table -->
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Roll</th>
+                                    <th>Class</th>
+                                    <th>Section</th>
+                                    <th>Exam</th>
+                                    <th>Year</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="seatPlan, iterStat : ${seatPlans}">
+                                    <td th:text="${iterStat.count}"></td>
+                                    <td th:text="${seatPlan.roll}"></td>
+                                    <td th:text="${seatPlan.className}"></td>
+                                    <td th:text="${seatPlan.sectionName}"></td>
+                                    <td th:text="${seatPlan.examName}"></td>
+                                    <td th:text="${seatPlan.year}"></td>
+                                    <td>
+                                        <a th:href="@{'editseatplan/' + ${seatPlan.id}}"><i
+                                                class="fa fa-edit"></i></a>
+                                        <a th:href="@{'deleteseatplan/' + ${seatPlan.id}}"><i class="fa fa-trash"
+                                                                                                    aria-hidden="true"></i></a>
+                                        <a href="#" data-toggle="modal"
+                                           th:attr="data-target='#seatPlanDetailsModal' + ${iterStat.index}">
+                                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(seatPlans)}">
+                                    <td colspan="5" class="text-center">No seat plans found.</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- End Table -->
+
+                        <!-- Seat Plan Details Modal -->
+                        <tr th:each="seatPlan, iterStat : ${seatPlans}">
+                            <div th:id="'seatPlanDetailsModal' + ${iterStat.index}" class="modal fade" tabindex="-1"
+                                 role="dialog" aria-labelledby="seatPlanDetailsModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Seat Plan Details</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <table class="table table-bordered mt-3">
+                                                <tbody>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <td th:text="${seatPlan.id}"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Roll</th>
+                                                    <td th:text="${seatPlan.roll}"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Class</th>
+                                                    <td th:text="${seatPlan.className}"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Section</th>
+                                                    <td th:text="${seatPlan.sectionName}"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Section</th>
+                                                    <td th:text="${seatPlan.examName}"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Section</th>
+                                                    <td th:text="${seatPlan.year}"></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </tr>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

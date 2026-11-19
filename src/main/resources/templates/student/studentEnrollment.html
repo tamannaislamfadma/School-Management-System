@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Form</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="main_container">
+        <div class="col-md-12">
+            <div class="right_col" role="main">
+                <div class="col-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><b>Enroll Student</b></h2>
+                            <div style="text-align: right;">
+                                <a th:href="@{/student/list}" class="btn btn-outline-success btn-sm"> Student Lists</a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <form th:action="@{/student/save}" method="post" th:object="${student}" id="studentForm">
+
+                            <input type="hidden" name="activeStatus" value="1"/>
+
+                            <div class="form-group col-md-12">
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="classId" class="form-label">Class</label>
+                                        <select class="form-control" id="classId" name="classId" required>
+                                            <option value="">Select Class</option>
+                                            <option th:each="class : ${classList}"
+                                                    th:value="${class.id}"
+                                                    th:text="${class.className}">
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="sectionId" class="form-label">Section</label>
+                                        <select name="sectionId" class="form-control" id="sectionId" required>
+                                            <option value="">Select Section</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="name" class="form-label">Name</label>
+                                        <input type="text" th:field="*{name}" class="form-control" id="name" required>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="email" class="form-label">Email ID</label>
+                                        <input type="email" th:field="*{email}" class="form-control" id="email">
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="fathersName" class="form-label">Father's Name</label>
+                                        <input type="text" th:field="*{fathersName}" class="form-control" id="fathersName">
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="mothersName" class="form-label">Mother's Name</label>
+                                        <input type="text" th:field="*{mothersName}" class="form-control" id="mothersName">
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="guardianContact" class="form-label">Guardian Contact</label>
+                                        <input type="text" th:field="*{guardianContact}" class="form-control" id="guardianContact">
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="gender" class="form-label">Gender</label>
+                                        <select th:field="*{gender}" class="form-control" id="gender">
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="bloodGroup" class="form-label">Blood Group</label>
+                                        <input type="text" th:field="*{bloodGroup}" class="form-control" id="bloodGroup">
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="address" class="form-label">Address</label>
+                                        <input type="text" th:field="*{address}" class="form-control" id="address">
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="dob" class="form-label">Date of Birth</label>
+                                        <input type="date" th:field="*{dob}" class="form-control" id="dob">
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Submit</button>
+
+                            <script>
+                                $(document).ready(function() {
+                                    $('#classId').change(function() {
+                                        var className = $("#classId option:selected").text();
+                                        var sectionDropdown = $('#sectionId');
+
+                                        sectionDropdown.empty().append('<option value="">Loading...</option>');
+
+                                        if (className && className !== "Select Class") {
+                                            $.ajax({
+                                                url: '/teacher/findSectionByClassName/' + className,
+                                                type: 'GET',
+                                                dataType: 'json',
+                                                success: function(sections) {
+                                                    sectionDropdown.empty().append('<option value="">Select Section</option>');
+                                                    if (sections && sections.length > 0) {
+                                                        $.each(sections, function(index, section) {
+                                                            sectionDropdown.append('<option value="' + section.sectionId + '">' + section.sectionName + '</option>');
+                                                        });
+                                                    }
+                                                },
+                                                error: function(xhr, status, error) {
+                                                    console.error("AJAX error:", error);
+                                                    sectionDropdown.empty().append('<option value="">Error loading sections</option>');
+                                                }
+                                            });
+                                        } else {
+                                            sectionDropdown.empty().append('<option value="">Select Section</option>');
+                                        }
+                                    });
+                                });
+                            </script>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher Assignments</title>
+    <!-- Include jQuery (required for AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="main_container">
+        <div class="col-md-12">
+            <div class="right_col" role="main">
+                <div class="col-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><b>Teacher Assignments</b></h2>
+                            <div style="text-align: right;">
+                                <a th:href="@{/teacher/assign}" class="btn btn-outline-success btn-sm">Assign Teacher</a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <div class="x_content">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="card-box table-responsive">
+                                        <table id="datatable-buttons" class="table table-striped table-bordered display" style="width:100%">
+                                            <thead>
+                                            <tr>
+                                                <th class="text-center">S/N</th>
+                                                <th class="text-center">Class Name</th>
+                                                <th class="text-center">Section Name</th>
+                                                <th class="text-center">Course Name</th>
+                                                <th class="text-center">Teacher Name</th>
+                                                <th class="text-center">Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="assignment, iterStat : ${assignments}">
+                                                <td th:text="${iterStat.index + 1}" class="text-center"></td>
+                                                <td th:text="${assignment?.classWiseSections?.classes?.className ?: 'N/A'}" class="text-center"></td>
+                                                <td th:text="${assignment?.classWiseSections?.sections?.sectionName ?: 'N/A'}" class="text-center"></td>
+                                                <td th:text="${assignment?.classWiseCourse?.courses?.courseName ?: 'N/A'}" class="text-center"></td>
+                                                <td th:text="${assignment?.teacher?.name ?: 'N/A'}" class="text-center"></td>
+                                                <td class="text-center">
+                                                    <div class="d-flex justify-content-center align-items-center">
+                                                        <a class="d-flex align-items-center justify-content-center text-success mx-1"
+                                                           type="button"
+                                                           data-toggle="modal"
+                                                           th:data-target="'#updateAssignment'+${iterStat.index}">
+                                                            <i class="fa fa-edit"></i>
+                                                        </a>
+                                                        <a class="text-danger mx-2"
+                                                           th:href="@{/teacher/deleteAssignment/{id}(id=${assignment.id})}"
+                                                           onclick="return confirm('Are you sure you want to delete this assignment?')">
+                                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                                        </a>
+                                                        <a type="button" data-toggle="modal"
+                                                           th:data-target="'#detailsForAssignment'+${iterStat.index}">
+                                                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr th:if="${assignments == null or assignments.isEmpty()}">
+                                                <td colspan="6" class="text-center">No teacher assignments found</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Details Modal -->
+                        <div class="modal fade" th:each="assignment, iterStat : ${assignments}"
+                             th:id="'detailsForAssignment'+${iterStat.index}" tabindex="-1" role="dialog"
+                             aria-labelledby="detailsForClassCourse" aria-hidden="true">
+                            <div class="modal-dialog custom-modal-size" role="document">
+                                <div class="modal-content modalContent">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-black-50" id="detailsForClassCourse">Assigned Teacher Information</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true" cursor="pointer">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table class="table table-striped table-bordered display" style="width:100%">
+                                            <thead>
+                                            <tr>
+                                                <th class="text-center">Teacher</th>
+                                                <th class="text-center">Class</th>
+                                                <th class="text-center">Section</th>
+                                                <th class="text-center">Course</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr class="text-center">
+                                                <td th:text="${assignment.teacher?.name ?: 'N/A'}"></td>
+                                                <td th:text="${assignment.classWiseSections?.classes?.className ?: 'N/A'}"></td>
+                                                <td th:text="${assignment.classWiseSections?.sections?.sectionName ?: 'N/A'}"></td>
+                                                <td th:text="${assignment.classWiseCourse?.courses?.courseName ?: 'N/A'}"></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    <!--  Update teacher assignment modal-->
+
+                        <div class="modal fade" th:each="assignment, iterStat : ${assignments}"
+                             th:id="'updateAssignment'+${iterStat.index}" tabindex="-1"
+                             role="dialog">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Update Teacher Assignment</h5>
+                                        <button type="button" class="close" data-dismiss="modal">
+                                            <span>&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form th:action="@{/teacher/editAssignment/{id}(id=${assignment.id})}"
+                                              method="post"
+                                              class="mb-3">
+                                            <input type="hidden" name="id" th:value="${assignment.id}" />
+                                            <input type="hidden" th:id="'selectedClassId'+${iterStat.index}" name="classId" />
+                                            <input type="hidden" th:id="'currentSectionId'+${iterStat.index}" th:value="${assignment.classWiseSections?.sections?.sectionId}" />
+                                            <input type="hidden" th:id="'currentCourseId'+${iterStat.index}" th:value="${assignment.classWiseCourse?.courses.id}" />
+
+                                            <!-- Teacher Selection -->
+                                            <div class="mb-3">
+                                                <label th:for="'teacherId'+${iterStat.index}" class="form-label">Teacher:</label>
+                                                <select class="form-control" th:id="'teacherId'+${iterStat.index}" name="teacherId" required>
+                                                    <option value="">Select Teacher</option>
+                                                    <option th:each="teacher : ${teacherList}"
+                                                            th:value="${teacher.id}"
+                                                            th:text="${teacher.name}"
+                                                            th:selected="${assignment.teacher != null && assignment.teacher.id == teacher.id}">
+                                                    </option>
+                                                </select>
+                                            </div>
+
+                                            <!-- Class Selection -->
+                                            <div class="mb-3">
+                                                <label th:for="'classId'+${iterStat.index}" class="form-label">Class:</label>
+                                                <select class="form-control" th:id="'classId'+${iterStat.index}" name="classId" required>
+                                                    <option value="">Select Class</option>
+                                                    <option th:each="classItem : ${classList}"
+                                                            th:value="${classItem.id}"
+                                                            th:text="${classItem.className}"
+                                                            th:selected="${assignment.classWiseSections != null && assignment.classWiseSections.classes.id == classItem.id}">
+                                                    </option>
+                                                </select>
+                                            </div>
+
+                                            <!-- Section Selection -->
+                                            <div class="mb-3">
+                                                <label th:for="'sectionId'+${iterStat.index}" class="form-label">Section:</label>
+                                                <select class="form-control" th:id="'sectionId'+${iterStat.index}" name="sectionId" required>
+                                                    <option value="">Select Section</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- Course Selection -->
+                                            <div class="mb-3">
+                                                <label th:for="'courseId'+${iterStat.index}" class="form-label">Course:</label>
+                                                <select class="form-control" th:id="'courseId'+${iterStat.index}" name="courseId" required>
+                                                    <option value="">Select Course</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- Submit Button -->
+                                            <button type="submit" class="btn btn-primary">Update Assignment</button>
+                                        </form>
+
+                                        <script>
+                                            $(document).ready(function() {
+
+                                                $('body').on('change', '[id^=classId]', function() {
+                                                    var classId = $(this).val();
+                                                    var className = $(this).find("option:selected").text();
+                                                    var index = $(this).attr('id').replace('classId', '');
+
+
+                                                    $('#selectedClassId' + index).val(classId);
+
+
+                                                    var sectionDropdown = $('#sectionId' + index);
+                                                    sectionDropdown.empty().append('<option value="">Loading...</option>');
+
+                                                    if (className && className !== "Select Class") {
+                                                        $.ajax({
+                                                            url: '/teacher/findSectionByClassName/' + className,
+                                                            type: 'GET',
+                                                            dataType: 'json',
+                                                            success: function(sections) {
+                                                                sectionDropdown.empty().append('<option value="">Select Section</option>');
+
+                                                                if (sections && sections.length > 0) {
+                                                                    $.each(sections, function(index, section) {
+                                                                        sectionDropdown.append('<option value="' + section.sectionId + '">' + section.sectionName + '</option>');
+                                                                    });
+                                                                }
+
+
+                                                                var currentSectionId = $('#currentSectionId' + index).val();
+                                                                if (currentSectionId) {
+                                                                    sectionDropdown.val(currentSectionId);
+                                                                }
+                                                            },
+                                                            error: function(xhr, status, error) {
+                                                                console.error("AJAX error:", error);
+                                                                sectionDropdown.empty().append('<option value="">Error loading sections</option>');
+                                                            }
+                                                        });
+                                                    } else {
+                                                        sectionDropdown.empty().append('<option value="">Select Section</option>');
+                                                    }
+
+
+                                                    var courseDropdown = $('#courseId' + index);
+                                                    courseDropdown.empty().append('<option value="">Loading...</option>');
+
+                                                    if (className && className !== "Select Class") {
+                                                        $.ajax({
+                                                            url: '/teacher/findCourseByClassName/' + className,
+                                                            type: 'GET',
+                                                            dataType: 'json',
+                                                            success: function(courses) {
+                                                                courseDropdown.empty().append('<option value="">Select Course</option>');
+
+                                                                if (courses && courses.length > 0) {
+                                                                    $.each(courses, function(index, course) {
+                                                                        courseDropdown.append('<option value="' + course.courseId + '">' + course.courseName + '</option>');
+                                                                    });
+                                                                }
+
+
+                                                                var currentCourseId = $('#currentCourseId' + index).val();
+                                                                if (currentCourseId) {
+                                                                    courseDropdown.val(currentCourseId);
+                                                                }
+                                                            },
+                                                            error: function(xhr, status, error) {
+                                                                console.error("AJAX error:", error);
+                                                                courseDropdown.empty().append('<option value="">Error loading courses</option>');
+                                                            }
+                                                        });
+                                                    } else {
+                                                        courseDropdown.empty().append('<option value="">Select Course</option>');
+                                                    }
+                                                });
+
+
+                                                $('body').on('shown.bs.modal', '.modal', function () {
+                                                    var index = $(this).find('[id^=classId]').attr('id').replace('classId', '');
+                                                    $(this).find('[id^=classId]').trigger('change');
+                                                });
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

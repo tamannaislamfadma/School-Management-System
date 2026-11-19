@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* --- Stats Cards --- */
+        .tile-stats {
+            position: relative;
+            display: block;
+            margin-bottom: 12px;
+            border: 1px solid #E4E4E4;
+            border-radius: 5px;
+            overflow: hidden;
+            padding: 10px; /* Reduced padding */
+            background: #FFF;
+            transition: all 0.3s ease-in-out;
+            color: #fff;
+        }
+        .tile-stats:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .tile-stats .icon { width: 20px; height: 20px; color: rgba(255,255,255,0.3); position: absolute; right: 40px; top: 15px; z-index: 1; }
+        .tile-stats .icon i { margin: 0; font-size: 50px; line-height: 0; vertical-align: bottom; padding: 0; }
+        .tile-stats .count { font-size: 30px; font-weight: bold; line-height: 1.658; margin-left: 10px; margin-top: 5px; }
+        .tile-stats h3 { font-size: 14px; margin-left: 10px; margin-top: 0; opacity: 0.9; }
+
+        .bg-blue { background-color: #3498DB; }
+        .bg-green { background-color: #1ABB9C; }
+        .bg-red { background-color: #E74C3C; }
+
+        /* --- Alignment Fixes --- */
+        /* Both panels get the same fixed height */
+        .panel-fixed-height {
+            height: 400px;
+            overflow: hidden; /* Prevents outer scroll */
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            padding: 10px;
+        }
+
+        .notification-wrapper {
+            height: 330px; /* Leaves room for tabs/header */
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        /* --- Notification Items --- */
+        .request-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            background: #fff;
+            margin-bottom: 5px;
+        }
+        .request-item:hover { background: #f9f9f9; }
+
+        /* Scrollbar styling */
+        .notification-wrapper::-webkit-scrollbar { width: 5px; }
+        .notification-wrapper::-webkit-scrollbar-track { background: #f1f1f1; }
+        .notification-wrapper::-webkit-scrollbar-thumb { background: #ccc; border-radius: 5px; }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content" class="right_col" role="main">
+
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>Admin Dashboard</h3>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="row top_tiles">
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                <div class="tile-stats bg-blue">
+                    <div class="icon"><i class="fa fa-users"></i></div>
+                    <div class="count" th:text="${totalStudents}">0</div>
+                    <h3>Total Students</h3>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                <div class="tile-stats bg-green">
+                    <div class="icon"><i class="fa fa-graduation-cap"></i></div>
+                    <div class="count" th:text="${totalTeachers}">0</div>
+                    <h3>Total Teachers</h3>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                <div class="tile-stats bg-red">
+                    <div class="icon"><i class="fa fa-envelope"></i></div>
+                    <div class="count" th:text="${pendingAdmissions.size()}">0</div>
+                    <h3>Pending Admissions</h3>
+                </div>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="row">
+
+            <div class="col-md-8 col-sm-12 col-xs-12">
+                <div class="x_panel panel-fixed-height">
+                    <div class="x_title">
+                        <h2><i class="fa fa-pie-chart"></i> School Statistics</h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <div class="chart-wrapper">
+                            <canvas id="demographicsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <div class="x_panel panel-fixed-height">
+                    <div class="x_title">
+                        <h2><i class="fa fa-bell"></i> Requests</h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+
+                        <ul class="nav nav-tabs bar_tabs" id="myTab" role="tablist">
+                            <li class="nav-item active">
+                                <a class="nav-link active" id="admission-tab" data-toggle="tab" href="#admission" role="tab">
+                                    Admissions <span class="badge bg-red" th:text="${pendingAdmissions.size()}">0</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="teacher-tab" data-toggle="tab" href="#teacherReq" role="tab">Teacher</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="student-tab" data-toggle="tab" href="#studentReq" role="tab">Student</a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content notification-wrapper" id="myTabContent">
+
+                            <div class="tab-pane fade active in" id="admission" role="tabpanel">
+                                <div th:each="app : ${pendingAdmissions}" class="request-item">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div>
+                                            <strong style="font-size: 14px; color: #333;" th:text="${app.studentName}">Name</strong>
+                                            <br>
+                                            <small class="text-muted">Class: <span th:text="${app.applyingClass}"></span></small>
+                                        </div>
+                                        <div class="btn-group">
+                                            <a th:href="@{'/admin/admission/approve/' + ${app.id}}" class="btn btn-sm btn-success" title="Approve"><i class="fa fa-check"></i></a>
+                                            <a th:href="@{'/admin/admission/reject/' + ${app.id}}" class="btn btn-sm btn-danger" title="Reject"><i class="fa fa-times"></i></a>
+                                        </div>
+                                    </div>
+                                    <small><i class="fa fa-phone"></i> <span th:text="${app.mobileNumber}"></span></small>
+                                </div>
+                                <div th:if="${#lists.isEmpty(pendingAdmissions)}" class="text-center text-muted" style="margin-top: 50px;">
+                                    <i class="fa fa-check-circle-o fa-3x"></i><br>All Caught Up!
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="teacherReq" role="tabpanel">
+                                <div th:each="req : ${teacherRequests}" class="request-item">
+                                    <strong th:text="${req.senderName}">Teacher</strong>
+                                    <p th:text="${req.message}">Msg...</p>
+                                    <form th:action="@{/admin/request/reply}" method="post" class="input-group">
+                                        <input type="hidden" name="requestId" th:value="${req.id}">
+                                        <input type="text" name="replyMessage" class="form-control input-sm" placeholder="Reply...">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary btn-sm" type="submit"><i class="fa fa-paper-plane"></i></button>
+                                        </span>
+                                    </form>
+                                </div>
+                                <div th:if="${#lists.isEmpty(teacherRequests)}" class="text-center text-muted" style="margin-top: 50px;">No requests.</div>
+                            </div>
+
+                            <div class="tab-pane fade" id="studentReq" role="tabpanel">
+                                <div th:each="req : ${studentRequests}" class="request-item">
+                                    <strong th:text="${req.senderName}">Student</strong>
+                                    <p th:text="${req.message}">Msg...</p>
+                                    <form th:action="@{/admin/request/reply}" method="post" class="input-group">
+                                        <input type="hidden" name="requestId" th:value="${req.id}">
+                                        <input type="text" name="replyMessage" class="form-control input-sm" placeholder="Reply...">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary btn-sm" type="submit"><i class="fa fa-paper-plane"></i></button>
+                                        </span>
+                                    </form>
+                                </div>
+                                <div th:if="${#lists.isEmpty(studentRequests)}" class="text-center text-muted" style="margin-top: 50px;">No requests.</div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        document.addEventListener("DOMContentLoaded", function() {
+            var ctx = document.getElementById('demographicsChart').getContext('2d');
+            var students = /*[[${totalStudents}]]*/ 0;
+            var teachers = /*[[${totalTeachers}]]*/ 0;
+
+            // Ensure chart renders even if data is 0
+            if (students === 0 && teachers === 0) { students = 1; teachers = 0; }
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Students', 'Teachers'],
+                    datasets: [{
+                        data: [students, teachers],
+                        backgroundColor: ['#3498DB', '#1ABB9C'],
+                        hoverBackgroundColor: ['#5DADE2', '#48C9B0'],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Allows chart to fill the container height
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12 } }
+                    },
+                    layout: { padding: 10 }
+                }
+            });
+        });
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>

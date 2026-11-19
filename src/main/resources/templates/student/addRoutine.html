@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Routine</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="main_container">
+        <div class="col-md-12">
+            <div class="right_col" role="main">
+                <div class="col-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><b>Add Class Routine</b></h2>
+                            <div style="text-align: right;">
+                                <a th:href="@{/student/routinelist}" class="btn btn-outline-success btn-sm"> Routine Lists</a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <form th:action="@{/student/saveroutine}" method="post" th:object="${routine}" id="routineForm">
+
+                            <div class="form-group">
+                                <label>Class</label>
+                                <select class="form-control" name="classId" id="classId" required>
+                                    <option value="">Select Class</option>
+                                    <option th:each="class : ${classList}"
+                                            th:value="${class.id}"
+                                            th:text="${class.className}"></option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Section</label>
+                                <select class="form-control" name="sectionId" id="sectionId" required>
+                                    <option value="">Select Section</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Course / Subject Name</label>
+                                <input type="text" class="form-control" th:field="*{courseName}" placeholder="e.g. Mathematics" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Period / Time</label>
+                                <input type="text" class="form-control" th:field="*{period}" placeholder="e.g. 1st Period (10:00 - 11:00)" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Submit Routine</button>
+
+                        </form>
+
+                        <script>
+                            $(document).ready(function () {
+                                $('#classId').change(function () {
+                                    var className = $("#classId option:selected").text();
+                                    var sectionDropdown = $('#sectionId');
+
+                                    sectionDropdown.empty().append('<option value="">Loading Section...</option>');
+
+                                    if (className && className !== "Select Class") {
+                                        $.ajax({
+                                            url: '/teacher/findSectionByClassName/' + className,
+                                            type: 'GET',
+                                            dataType: 'json',
+                                            success: function (sections) {
+                                                sectionDropdown.empty().append('<option value="">Select Section</option>');
+                                                if (sections && sections.length > 0) {
+                                                    $.each(sections, function (index, section) {
+                                                        sectionDropdown.append('<option value="' + section.sectionId + '">' + section.sectionName + '</option>');
+                                                    });
+                                                }
+                                            },
+                                            error: function (xhr, status, error) {
+                                                console.error("AJAX error:", error);
+                                                sectionDropdown.empty().append('<option value="">Error loading sections</option>');
+                                            }
+                                        });
+                                    } else {
+                                        sectionDropdown.empty().append('<option value="">Select Section</option>');
+                                    }
+                                });
+                            });
+                        </script>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

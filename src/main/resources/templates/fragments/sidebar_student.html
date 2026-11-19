@@ -1,0 +1,25 @@
+<div th:fragment="sidebar" class="col-md-3 left_col menu_fixed">
+    <div class="left_col scroll-view">
+        <div class="navbar nav_title" style="border: 0;">
+            <a th:href="@{/student/dashboard}" class="site_title">
+                <img th:src="@{/images/logo.png}" alt="Logo" style="height:50px; width:auto; margin-left: 10px;">
+                <span>Student Portal</span>
+            </a>
+        </div>
+
+        <div class="clearfix"></div>
+        <br/>
+
+        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+            <div class="menu_section">
+                <h3>Student Area</h3>
+                <ul class="nav side-menu">
+                    <li><a th:href="@{/student/dashboard}"><i class="fa fa-home"></i> My Dashboard</a></li>
+                    <li><a href="#"><i class="fa fa-list-alt"></i> Class Routine</a></li>
+                    <li><a href="#"><i class="fa fa-trophy"></i> My Results</a></li>
+                    <li><a href="#"><i class="fa fa-money"></i> Payment History</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

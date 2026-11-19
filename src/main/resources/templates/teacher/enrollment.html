@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Enroll Teacher</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="main_container">
+        <div class="col-md-12">
+            <div class="right_col" role="main">
+                <div class="col-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><b>Enroll Teacher</b></h2>
+                            <div style="text-align: right;">
+                                <a th:href="@{/teacher/list}" class="btn btn-outline-success btn-sm"> Teacher Lists</a>
+                            </div>
+
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+                        <form th:action="@{/teacher/save}" method="post" th:object="${teacher}" id="teacherForm">
+                            <input type="hidden" name="activeStatus" value="1"/>
+
+                            <div class="form-group col-md-12">
+                                <div class="row">
+
+                                    <div class="form-group col-md-4">
+                                        <label for="manualUsername" style="color: #d9534f; font-weight: bold;">User ID (For Login)</label>
+                                        <input type="text" th:field="*{manualUsername}" class="form-control"
+                                               placeholder="Create User ID (e.g. rafat.teacher)" id="manualUsername" required/>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="manualPassword" style="color: #d9534f; font-weight: bold;">Password</label>
+                                        <input type="text" th:field="*{manualPassword}" class="form-control"
+                                               placeholder="Set Password" id="manualPassword" required/>
+                                    </div>
+
+                                    <div class="col-md-4"></div>
+
+                                    <div class="col-md-12"><hr></div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="name">Name</label>
+                                        <input type="text" th:field="*{name}" class="form-control"
+                                               placeholder="Enter Teacher's Name" id="name" required/>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="email">Email</label>
+                                        <input type="email" th:field="*{email}" id="email" class="form-control"
+                                               placeholder="Enter Email" required/>
+                                    </div>
+
+
+                                    <div class="form-group col-md-4">
+                                        <label for="fathersName">Father's Name</label>
+                                        <input type="text" th:field="*{fathersName}" id="fathersName"
+                                               class="form-control"
+                                               placeholder="Enter Father's Name" required/>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="mothersName">Mother's Name</label>
+                                        <input type="text" th:field="*{mothersName}" id="mothersName"
+                                               class="form-control"
+                                               placeholder="Enter Mother's Name" required/>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="phoneNumber">Phone Number</label>
+                                        <input type="text" th:field="*{phoneNumber}" id="phoneNumber"
+                                               class="form-control" placeholder="Enter Phone Number" required/>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="age">Age</label>
+                                        <input type="number" th:field="*{age}" id="age"
+                                               class="form-control" placeholder="Enter Age" required/>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="academicBackground">Academic Background</label>
+                                        <input type="text" th:field="*{academicBackground}" id="academicBackground"
+                                               class="form-control" placeholder="Enter Academic Background" required/>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="nationality">Nationality</label>
+                                        <input type="text" th:field="*{nationality}" id="nationality"
+                                               class="form-control" placeholder="Enter Nationality" required/>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="religion">Religion</label>
+                                        <input type="text" th:field="*{religion}" id="religion"
+                                               class="form-control" placeholder="Enter Religion" required/>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="dob">Date Of Birth</label>
+                                        <input type="text" th:field="*{dob}" id="dob"
+                                               class="form-control"
+                                               placeholder="Enter Date Of Birth in (Date/Month/Year)" required/>
+                                    </div>
+
+
+                                    <div class="form-group col-md-4">
+                                        <label for="documentType" class="form-label">Document Type</label>
+                                        <select name="documentType" class="form-control" id="documentType" required>
+                                            <option value="">Select Document Type</option>
+                                            <option value="NID">NID</option>
+                                            <option value="BirthCertificate">Birth Certificate</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="nidNumber" class="form-label">NID Number</label>
+                                        <input type="text" th:field="*{nidNumber}" class="form-control" id="nidNumber">
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <button type="submit" class="btn btn-primary">Enroll Teacher</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

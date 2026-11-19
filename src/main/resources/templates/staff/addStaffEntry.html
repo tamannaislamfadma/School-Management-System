@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Staff Entry</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="main_container">
+        <div class="col-md-12">
+            <div class="right_col" role="main">
+                <div class="col-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><b>Add Staff Entry</b></h2>
+                            <div style="text-align: right;">
+                                <a th:href="@{/staff/staffList}" class="btn btn-outline-success btn-sm">Staff List</a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <form th:action="@{/staff/saveStaffEntry}" th:object="${staffEntry}" method="post"
+                              enctype="multipart/form-data"
+                              id="staffForm">
+
+                            <input type="hidden" name="activeStatus" value="1"/>
+
+                            <div class="form-group col-md-6">
+                                <label>Name (English)</label>
+                                <input type="text" th:field="*{nameEnglsih}" class="form-control" id="nameEnglsih"
+                                       required>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label>Name (Bangla)</label>
+                                <input type="text" th:field="*{nameBangla}" class="form-control" id="nameBangla">
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label>Position</label>
+                                <input type="text" th:field="*{position}" class="form-control" id="position" required>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label>Mobile Number</label>
+                                <input type="text" th:field="*{mobileNumber}" class="form-control" id="mobileNumber"
+                                       required>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label>Email Address</label>
+                                <input type="email" th:field="*{emailAddress}" class="form-control" id="emailAddress"
+                                       required>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label>Staff Image</label>
+                                <input type="file" name="photo" accept="image/*" class="form-control" id="stuffImage">
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Save Staff Entry</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

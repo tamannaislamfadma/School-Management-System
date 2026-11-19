@@ -1,0 +1,82 @@
+<div th:fragment="sidebar" class="col-md-3 left_col menu_fixed">
+    <div class="left_col scroll-view">
+        <div class="navbar nav_title">
+            <a href="#" th:href="@{/}" class="site_title">
+                <img th:src="@{/images/logo.png}" alt="Logo" style="height:70px; width:auto; margin-top:5px;">
+            </a>
+        </div>
+
+        <div class="clearfix"></div>
+        <br/>
+
+        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+            <div class="menu_section">
+                <ul class="nav side-menu">
+
+                    <li>
+                        <a href="#" th:href="@{/}">
+                            <i class="fa fa-tachometer"></i> Dashboard
+                        </a>
+                    </li>
+
+                    <li class="side_menu_item">
+                        <a class="common-link">
+                            <span class="left"><i class="fa fa-gears"></i> Common Settings</span>
+                            <span class="fa fa-chevron-down"></span>
+                        </a>
+                        <ul class="nav child_menu">
+                            <li><a th:href="@{/student/manage}"><i class="fa fa-plus"></i> Class And Sections</a></li>
+                            <li><a th:href="@{/student/course}"><i class="fa fa-plus"></i> Class And Courses</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="side_menu_item">
+                        <a class="employee-link">
+                            <span class="left"><i class="fa fa-edit"></i> Teacher</span>
+                            <span class="fa fa-chevron-down"></span>
+                        </a>
+                        <ul class="nav child_menu">
+                            <li><a th:href="@{/teacher/create}"><i class="fa fa-eye"></i> Enrollment</a></li>
+                            <li><a th:href="@{/teacher/list}"><i class="fa fa-list"></i> Teacher List</a></li>
+                            <li><a th:href="@{/teacher/assign}"><i class="fa fa-list"></i> Assign Teacher</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="side_menu_item">
+                        <a class="attendance-link">
+                            <span class="left"><i class="fa fa-calendar-check-o"></i> Student</span>
+                            <span class="fa fa-chevron-down"></span>
+                        </a>
+                        <ul class="nav child_menu">
+                            <li><a th:href="@{/student/create}"><i class="fa fa-eye"></i> Enrollment</a></li>
+                            <li><a th:href="@{/student/list}"><i class="fa fa-list"></i> Student List</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="side_menu_item">
+                        <a class="attendance-link">
+                            <span class="left"><i class="fa fa-calendar-check-o"></i> Routine</span>
+                            <span class="fa fa-chevron-down"></span>
+                        </a>
+                        <ul class="nav child_menu">
+                            <li><a th:href="@{/student/addroutine}"><i class="fa fa-eye"></i> Add Routine</a></li>
+                            <li><a th:href="@{/student/routinelist}"><i class="fa fa-list"></i> Routine List</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="side_menu_item">
+                        <a class="attendance-link">
+                            <span class="left"><i class="fa fa-money"></i> Accounts</span>
+                            <span class="fa fa-chevron-down"></span>
+                        </a>
+                        <ul class="nav child_menu">
+                            <li><a th:href="@{/payment/create}"><i class="fa fa-plus-circle"></i> Add Payment</a></li>
+                            <li><a th:href="@{/payment/list}"><i class="fa fa-list-alt"></i> Payment History</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

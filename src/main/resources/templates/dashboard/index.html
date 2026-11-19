@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Dashboard</title>
+    <style>
+        /* Compact & Professional Card Style */
+        .dashboard-card {
+            background: #fff;
+            border-radius: 6px; /* Slightly smaller radius */
+            padding: 15px; /* Reduced padding for compact look */
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Lighter shadow */
+            text-align: center;
+            border-left: 4px solid #2A3F54;
+            transition: transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Layout: Icon Left, Text Right */
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Icon Styling */
+        .dashboard-card .icon-box {
+            font-size: 24px; /* Smaller icon */
+            color: #fff;
+            background-color: #1ABB9C; /* Green background circle */
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            border-radius: 50%;
+            text-align: center;
+        }
+
+        /* Text Container */
+        .dashboard-card .text-box {
+            text-align: right;
+        }
+
+        .dashboard-card .count-number {
+            font-size: 24px; /* Professional size */
+            font-weight: 700;
+            color: #2A3F54;
+            line-height: 1.2;
+        }
+
+        .dashboard-card .card-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #73879C;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+        /* Admin Badge Style */
+        .admin-badge {
+            font-size: 14px;
+            background-color: #2A3F54;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin-left: 10px;
+            vertical-align: middle;
+            font-weight: normal;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="main_container">
+        <div class="col-md-12">
+            <div class="right_col" role="main">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="text-center" style="margin-bottom: 25px; color: #2A3F54;">
+                            <b>Admin Dashboard</b>
+                            <span class="admin-badge">
+                                <i class="fa fa-user-secret"></i> Administrator
+                            </span>
+                        </h3>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-4 col-sm-6 col-xs-12">
+                        <div class="dashboard-card">
+                            <div class="icon-box" style="background-color: #3498DB;"><i class="fa fa-users"></i></div>
+                            <div class="text-box">
+                                <div class="count-number" th:text="${totalStudents}">0</div>
+                                <div class="card-title">Total Students</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-sm-6 col-xs-12">
+                        <div class="dashboard-card">
+                            <div class="icon-box" style="background-color: #E74C3C;"><i class="fa fa-graduation-cap"></i></div>
+                            <div class="text-box">
+                                <div class="count-number" th:text="${totalTeachers}">0</div>
+                                <div class="card-title">Total Teachers</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-sm-6 col-xs-12">
+                        <div class="dashboard-card">
+                            <div class="icon-box" style="background-color: #1ABB9C;"><i class="fa fa-list-alt"></i></div>
+                            <div class="text-box">
+                                <div class="count-number" th:text="${assignments.size()}">0</div>
+                                <div class="card-title">Active Assignments</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <br>
+
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2><b>Teacher Assignment List</b> <small>Class Schedule</small></h2>
+                                <div class="clearfix"></div>
+                            </div>
+
+                            <div class="x_content">
+                                <div class="table-responsive">
+                                    <table id="datatable" class="table table-striped table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Teacher Name</th>
+                                            <th>Class</th>
+                                            <th>Section</th>
+                                            <th>Course / Subject</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="assign : ${assignments}">
+                                            <td th:text="${assign.id}"></td>
+                                            <td th:text="${assign.teacher != null ? assign.teacher.name : 'N/A'}"></td>
+                                            <td th:text="${assign.classWiseSections != null ? assign.classWiseSections.classes.className : 'N/A'}"></td>
+                                            <td th:text="${assign.classWiseSections != null ? assign.classWiseSections.sections.sectionName : 'N/A'}"></td>
+                                            <td th:text="${assign.classWiseCourse != null ? assign.classWiseCourse.courses.courseName : 'N/A'}"></td>
+                                        </tr>
+                                        <tr th:if="${#lists.isEmpty(assignments)}">
+                                            <td colspan="5" class="text-center">No assignments found.</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

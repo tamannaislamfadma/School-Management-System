@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment List</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="main_container">
+        <div class="col-md-12">
+            <div class="right_col" role="main">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2><b>Payment History</b></h2>
+                        <div style="text-align: right;">
+                            <a th:href="@{/payment/create}" class="btn btn-outline-primary btn-sm">New Payment</a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Student Name</th>
+                                <th>Class</th>
+                                <th>Month</th>
+                                <th>Total Fee</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="pay, iterStat : ${paymentList}">
+                                <td th:text="${iterStat.count}"></td>
+                                <td th:text="${pay.student.name}"></td>
+                                <td th:text="${pay.student.classWiseSections.classes.className}"></td>
+                                <td th:text="${pay.month}"></td>
+                                <td th:text="${pay.totalAmount} + ' Tk'"></td>
+                                <td>
+                                    <a th:href="@{'/payment/edit/' + ${pay.id}}"><i class="fa fa-edit"></i></a>
+                                    <a th:href="@{'/payment/delete/' + ${pay.id}}" onclick="return confirm('Are you sure?');"><i class="fa fa-trash"></i></a>
+
+                                    <a href="#" data-toggle="modal" th:attr="data-target='#paymentModal' + ${iterStat.index}">
+                                        <i class="fa fa-info-circle"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(paymentList)}">
+                                <td colspan="6" class="text-center">No payment records found.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div th:each="pay, iterStat : ${paymentList}" class="modal fade"
+                             th:id="'paymentModal' + ${iterStat.index}" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Fee Details: <span th:text="${pay.student.name}"></span></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table class="table table-sm">
+                                            <tr><td>Month</td><td th:text="${pay.month}"></td></tr>
+                                            <tr><td>Admission Fee</td><td th:text="${pay.admissionFee}"></td></tr>
+                                            <tr><td>Tuition Fee</td><td th:text="${pay.tuitionFee}"></td></tr>
+                                            <tr><td>Lab Fee</td><td th:text="${pay.labFee}"></td></tr>
+                                            <tr><td>Extra Curricular</td><td th:text="${pay.extraCurricularFee}"></td></tr>
+                                            <tr><td>Development Fee</td><td th:text="${pay.developmentFee}"></td></tr>
+                                            <tr><td>Library Fee</td><td th:text="${pay.libraryFee}"></td></tr>
+                                            <tr><td>Exam Fee</td><td th:text="${pay.examFee}"></td></tr>
+                                            <tr><td>Insurance Fee</td><td th:text="${pay.insuranceFee}"></td></tr>
+                                            <tr><td>Others</td><td th:text="${pay.others}"></td></tr>
+                                            <tr style="background-color: #f2f2f2; font-weight: bold;">
+                                                <td>Total</td><td th:text="${pay.totalAmount}"></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

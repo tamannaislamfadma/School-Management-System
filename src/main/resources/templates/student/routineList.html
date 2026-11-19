@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Routine List</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="main_container">
+        <div class="col-md-12">
+            <div class="right_col" role="main">
+                <div class="col-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><b>Routine List</b></h2>
+                            <div style="text-align: right;">
+                                <a th:href="@{/student/addroutine}" class="btn btn-outline-primary btn-sm">Add Routine</a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Class</th>
+                                    <th>Section</th>
+                                    <th>Course / Headline</th>
+                                    <th>Period / Time</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="routine, iterStat : ${routineList}">
+                                    <td th:text="${iterStat.count}"></td>
+                                    <td th:text="${routine.className}"></td>
+                                    <td th:text="${routine.sectionName}"></td>
+                                    <td th:text="${routine.courseName}"></td>
+                                    <td th:text="${routine.period}"></td>
+                                    <td>
+                                        <a th:href="@{/student/updateroutine/{id}(id=${routine.id})}"><i class="fa fa-edit"></i></a>
+                                        <a th:href="@{/student/deleteroutine/{id}(id=${routine.id})}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(routineList)}">
+                                    <td colspan="6" class="text-center">No routines found.</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div> </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

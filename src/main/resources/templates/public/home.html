@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captain Campus - Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .news-ticker { background: #002147; color: white; padding: 10px 0; }
+        .news-label { background: #dc3545; padding: 5px 15px; font-weight: bold; margin-right: 10px; }
+        .hero-section { position: relative; height: 500px; overflow: hidden; }
+        .hero-img { width: 100%; height: 100%; object-fit: cover; }
+        .principal-card { border-left: 5px solid #002147; transition: transform 0.3s; }
+        .principal-card:hover { transform: translateY(-5px); }
+        .section-title { color: #002147; border-bottom: 3px solid #dc3545; display: inline-block; margin-bottom: 30px; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <img th:src="@{/images/logo.png}" width="40" height="40" class="d-inline-block align-top" alt="">
+            CAPTAIN CAMPUS
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#about">About Us</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Admission</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Circular</a></li>
+                        <li><a class="dropdown-item" href="/admission/apply">Apply Online</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                <li class="nav-item ms-2">
+                    <a href="/login" class="btn btn-danger btn-sm px-4">Login</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="news-ticker">
+    <div class="container d-flex align-items-center">
+        <span class="news-label">NOTICE</span>
+        <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
+            <span th:each="note : ${tickers}" class="me-5">
+                <i class="fas fa-bullhorn text-warning"></i>
+                <span th:text="${note.title} + ' - ' + ${note.date}"></span>
+            </span>
+            <span th:if="${#lists.isEmpty(tickers)}">Welcome to Captain Campus Official Website! Admission Open for 2026.</span>
+        </marquee>
+    </div>
+</div>
+
+<div class="hero-section">
+    <img th:src="@{/images/Schoolpic.png}" class="hero-img" alt="School Banner">
+    <div class="position-absolute top-50 start-50 translate-middle text-center text-white bg-dark bg-opacity-50 p-5 rounded">
+        <h1 class="display-4 fw-bold">Empowering Future Leaders</h1>
+        <p class="lead">Education | Discipline | Morality</p>
+        <a href="/admission/apply" class="btn btn-primary btn-lg mt-3">Apply for Admission</a>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card principal-card shadow h-100">
+                <div class="row g-0 h-100">
+                    <div class="col-md-4">
+                        <img th:src="@{/images/chairman.jpg}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Chairman">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Chairman's Message</h5>
+                            <p class="card-text small">"We are committed to building a nation through proper education..."</p>
+                            <p class="card-text"><small class="text-muted">Mr. Chairman Name</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card principal-card shadow h-100">
+                <div class="row g-0 h-100">
+                    <div class="col-md-4">
+                        <img th:src="@{/images/principal.jpg}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Principal">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Principal's Message</h5>
+                            <p class="card-text small">"Discipline is the bridge between goals and accomplishment..."</p>
+                            <p class="card-text"><small class="text-muted">Mr. Principal Name</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <h2 class="section-title">Latest News & Events</h2>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action" th:each="notice : ${notices}">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1" th:text="${notice.title}">Notice Title</h5>
+                        <small class="text-muted" th:text="${notice.date}">3 days ago</small>
+                    </div>
+                    <p class="mb-1" th:text="${#strings.abbreviate(notice.content, 100)}">Content preview...</p>
+                </a>
+                <div class="alert alert-info" th:if="${#lists.isEmpty(notices)}">
+                    No recent news updates.
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-decoration-none">Academic Calendar</a></li>
+                        <li><a href="#" class="text-decoration-none">Class Routine</a></li>
+                        <li><a href="#" class="text-decoration-none">Result Portal</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-dark text-white pt-5 pb-3 mt-5" id="contact">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>Contact Us</h5>
+                <p><i class="fas fa-map-marker-alt me-2"></i> <span th:text="${schoolAddress}">Address</span></p>
+                <p><i class="fas fa-envelope me-2"></i> <span th:text="${schoolEmail}">Email</span></p>
+            </div>
+            <div class="col-md-4">
+                <h5>Office Hours</h5>
+                <p>Sun - Thu: 08:00 AM - 02:00 PM</p>
+                <p>Fri - Sat: Closed</p>
+            </div>
+        </div>
+        <hr>
+        <div class="text-center">
+            <p>&copy; 2026 Captain Campus. All Rights Reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

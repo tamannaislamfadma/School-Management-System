@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Teacher Dashboard</title>
+    <style>
+        .teacher-card {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border-left: 4px solid #1ABB9C; /* Green Border */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .teacher-card:hover { transform: translateY(-3px); }
+        .teacher-card h4 { margin: 0 0 10px 0; font-size: 18px; color: #2A3F54; }
+        .teacher-card p { margin: 0; color: #73879C; }
+        .btn-action { margin-top: 10px; width: 100%; }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content" class="right_col" role="main">
+    <div class="">
+
+        <div class="page-title">
+            <div class="title_left">
+                <h3>Welcome, <span th:text="${teacher.name}">Teacher</span>!</h3>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-info alert-dismissible fade in" role="alert" th:if="${!#lists.isEmpty(notices)}">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <strong><i class="fa fa-bullhorn"></i> Notice:</strong>
+                    <span th:text="${notices[0].title}">Title</span> - <span th:text="${notices[0].content}">Content</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2><i class="fa fa-book"></i> My Assigned Classes</h2>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <div class="row">
+
+                            <div class="col-md-4 col-sm-6 col-xs-12" th:each="assign : ${myClasses}">
+                                <div class="teacher-card">
+                                    <h4 th:text="${assign.classWiseSections.classes.className}">Class 9</h4>
+                                    <p><strong>Section:</strong> <span th:text="${assign.classWiseSections.sections.sectionName}">A</span></p>
+                                    <p><strong>Subject:</strong> <span th:text="${assign.classWiseCourse.courses.courseName}">Math</span></p>
+
+                                    <div class="ln_solid" style="margin: 10px 0;"></div>
+
+                                    <a href="#" class="btn btn-dark btn-sm btn-action"><i class="fa fa-pencil"></i> Upload Marks</a>
+                                    <a href="#" class="btn btn-success btn-sm btn-action"><i class="fa fa-list"></i> View Students</a>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" th:if="${#lists.isEmpty(myClasses)}">
+                                <div class="text-center p-5 text-muted">
+                                    <i class="fa fa-coffee fa-3x"></i>
+                                    <h3>No classes assigned yet.</h3>
+                                    <p>Please contact the administrator to get your schedule.</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

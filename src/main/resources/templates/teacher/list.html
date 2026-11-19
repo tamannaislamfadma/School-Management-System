@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Teacher List</title>
+</head>
+<body>
+<div th:if="${newUsername}" class="alert alert-success alert-dismissible fade show" role="alert">
+    <h4 class="alert-heading"><i class="fas fa-check-circle"></i> Teacher Account Created!</h4>
+    <p>Please note down these credentials. They will not be shown again.</p>
+    <hr>
+    <div class="row">
+        <div class="col-md-6">
+            <strong>Username (ID):</strong> <span class="badge bg-dark fs-5" th:text="${newUsername}"></span>
+        </div>
+        <div class="col-md-6">
+            <strong>Password:</strong> <span class="badge bg-danger fs-5" th:text="${newPassword}"></span>
+        </div>
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<div layout:fragment="content">
+    <div class="main_container">
+        <div class="col-md-12">
+            <div class="right_col" role="main">
+                <div class="col-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2><b>Teacher List</b></h2>
+                            <div style="text-align: right;">
+                                <a th:href="@{/teacher/create}" class="btn btn-outline-success btn-sm">Enroll Teacher</a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <div class="x_content">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone Number</th>
+                                        <th>Age</th>
+                                        <th>Academic Background</th>
+                                        <th>Nationality</th>
+                                        <th>Religion</th>
+                                        <th>Date of Birth</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="teacher, iterStat : ${teachers}">
+                                        <td th:text="${teacher.id}"></td>
+                                        <td th:text="${teacher.name}"></td>
+                                        <td th:text="${teacher.email}"></td>
+                                        <td th:text="${teacher.phoneNumber}"></td>
+                                        <td th:text="${teacher.age}"></td>
+                                        <td th:text="${teacher.academicBackground}"></td>
+                                        <td th:text="${teacher.nationality}"></td>
+                                        <td th:text="${teacher.religion}"></td>
+                                        <td th:text="${teacher.dob}"></td>
+                                        <td>
+                                            <a th:href="@{/teacher/editTeacher/{id}(id=${teacher.id})}"><i class="fa fa-edit"></i></a>
+                                            <a th:href="@{/teacher/deleteTeacher/{id}(id=${teacher.id})}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                            <a href="#" data-toggle="modal" th:attr="data-target='#teacherDetailsModal' + ${iterStat.index}">
+                                                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${teachers == null || teachers.isEmpty()}">
+                                        <td colspan="10" class="text-center">No data available in table</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <div th:each="teacher, iterStat : ${teachers}" class="modal fade"
+                                     th:id="'teacherDetailsModal' + ${iterStat.index}" tabindex="-1" role="dialog"
+                                     aria-labelledby="teacherDetailsModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="teacherDetailsModalLabel">Teacher Details</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <table class="table table-bordered mt-3">
+                                                    <tbody>
+                                                    <tr><th>ID</th><td th:text="${teacher.id}"></td></tr>
+                                                    <tr><th>Name</th><td th:text="${teacher.name}"></td></tr>
+                                                    <tr><th>Email</th><td th:text="${teacher.email}"></td></tr>
+                                                    <tr><th>Father's Name</th><td th:text="${teacher.fathersName}"></td></tr>
+                                                    <tr><th>Mother's Name</th><td th:text="${teacher.mothersName}"></td></tr>
+                                                    <tr><th>Phone Number</th><td th:text="${teacher.phoneNumber}"></td></tr>
+                                                    <tr><th>Age</th><td th:text="${teacher.age}"></td></tr>
+                                                    <tr><th>Academic Background</th><td th:text="${teacher.academicBackground}"></td></tr>
+                                                    <tr><th>Nationality</th><td th:text="${teacher.nationality}"></td></tr>
+                                                    <tr><th>Religion</th><td th:text="${teacher.religion}"></td></tr>
+                                                    <tr><th>Date of Birth</th><td th:text="${teacher.dob}"></td></tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
